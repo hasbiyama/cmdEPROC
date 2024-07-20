@@ -32,11 +32,11 @@ HandleProcessInfo QueryHandleNamesByPid(PWSTR procName, DWORD processId, DWORD c
 
     HANDLE processHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, processId);
     printf("\n\t[+] Opening the process (PROCESS_DUP_HANDLE)");
-    if (!processHandle) {
-        printf("\n[-] Failed to open process %lu. Error: %lu\n", processId, GetLastError());
-        free(handleInfo);
-        return result;
-    }
+    // if (!processHandle) {
+    //     printf("\n[-] Failed to open process %lu. Error: %lu\n", processId, GetLastError());
+    //     free(handleInfo);
+    //     return result;
+    // }
 
     int handleCount = 0;
     DWORD uniqueProcessId = 0;
