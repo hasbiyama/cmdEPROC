@@ -32,17 +32,16 @@ HandleProcessInfo QueryHandleNamesByPid(PWSTR procName, DWORD processId, DWORD c
 
     HANDLE processHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, processId);
     printf("\n\t[+] Opening the process (PROCESS_DUP_HANDLE)");
-    // if (!processHandle) {
-    //     printf("\n[-] Failed to open process %lu. Error: %lu\n", processId, GetLastError());
-    //     free(handleInfo);
-    //     return result;
-    // }
+    if (!processHandle) {
+        printf("\n\t[x] Failed to open process %lu. Error: %lu\n", processId, GetLastError());
+        goto finding_another_handle;
+    }
 
     int handleCount = 0;
     DWORD uniqueProcessId = 0;
     BOOL found = FALSE; // Flag to track if a match is found
 
-    wprintf(L"\n");
+    printf("\n");
     // Iterate through each handle in the system handle information
     for (ULONG i = 0; i < handleInfo->HandleCount; i++) {
         SYSTEM_HANDLE handle = handleInfo->Handles[i];
@@ -157,7 +156,7 @@ HandleProcessInfo QueryHandleNamesByPid(PWSTR procName, DWORD processId, DWORD c
             }
         }
 
-        wprintf(L"\n");
+        printf("\n");
 
         free(typeInfo);
         free(objectNameInfo);
@@ -169,6 +168,9 @@ HandleProcessInfo QueryHandleNamesByPid(PWSTR procName, DWORD processId, DWORD c
 
     // If no match found and there's a need to continue searching in other processes with the same procName
     if (!found) {
+
+        finding_another_handle:
+        
         printf("\t[x] No matching handle found in process %lu\n\n[>] Trying other processes with the same procName\n", processId);
 
         // Find other processes with the same procName and repeat the process
